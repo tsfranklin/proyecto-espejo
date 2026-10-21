@@ -45,21 +45,39 @@ function pintarTareas() {
     // A) Creamos el elemento base <li> en la memoria
     const li = document.createElement('li');
     
-    // B) Añadimos las clases base y la clase dinámica de prioridad (Alta, Media, Baja)
+    // B) Añadimos las clases base y la clase dinámica de prioridad
     li.classList.add('item-tarea', tarea.prioridad);
     
-    // C) Si está completada, le añadimos la clase CSS que la tacha y la vuelve opaca
+    // C) Si está completada, le añadimos la clase CSS que la tacha
     if (tarea.completada) {
       li.classList.add('completada');
     }
 
-    // D) Inyectamos el texto y el botón de acción usando plantillas literales
+    // D) Inyectamos el texto y el botón de acción
     li.innerHTML = `
       <span>${tarea.titulo}</span>
       <button class="btn-toggle">
         ${tarea.completada ? 'Desmarcar' : 'Completar'}
       </button>
     `;
+
+    // --- NUEVO CÓDIGO INTERCALADO AQUÍ ---
+    // Cazamos el botón que acabamos de crear dentro de este 'li'
+    const botonToggle = li.querySelector('.btn-toggle');
+    
+    // Le añadimos la interactividad
+    botonToggle.addEventListener('click', () => {
+      // Magia Inmutable: Usamos .map() para cambiar el estado solo de esta tarea
+      tareas = tareas.map(t => {
+        if (t.id === tarea.id) {
+          return { ...t, completada: !t.completada };
+        }
+        return t; 
+      });
+      // Volvemos a pintar la lista
+      pintarTareas();
+    });
+    // ------------------------------------
 
     // E) Finalmente, anclamos la tarjeta terminada al DOM visible
     listaContenedor.appendChild(li);
