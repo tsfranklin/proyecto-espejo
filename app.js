@@ -30,12 +30,40 @@ async function inicializarApp() {
 
 // 4. FUNCIÓN DE RENDERIZADO: Encargada de pintar los nodos en el HTML
 function pintarTareas() {
-  // TODO: Limpiar el contenedor listaContenedor (innerHTML = '')
-  // TODO: Filtrar el array 'tareas' según el 'filtroActual' usando .filter()
-  // TODO: Recorrer el array filtrado y crear dinámicamente un elemento <li> por cada tarea
-  // TODO: Configurar las clases CSS según la prioridad y el estado (completada)
-  // TODO: Añadir un botón dentro de cada <li> para poder alternar el estado (Completada/Pendiente)
-  // TODO: Inyectar el <li> resultante en listaContenedor usando .appendChild()
+  // 1. Limpiamos el contenedor para evitar duplicados al repintar
+  listaContenedor.innerHTML = '';
+
+  // 2. Filtramos el array global según el estado del botón pulsado
+  const tareasFiltradas = tareas.filter(tarea => {
+    if (filtroActual === 'Todas') return true;
+    if (filtroActual === 'Pendientes') return !tarea.completada;
+    if (filtroActual === 'Completadas') return tarea.completada;
+  });
+
+  // 3. Recorremos el array filtrado para inyectar el HTML
+  tareasFiltradas.forEach(tarea => {
+    // A) Creamos el elemento base <li> en la memoria
+    const li = document.createElement('li');
+    
+    // B) Añadimos las clases base y la clase dinámica de prioridad (Alta, Media, Baja)
+    li.classList.add('item-tarea', tarea.prioridad);
+    
+    // C) Si está completada, le añadimos la clase CSS que la tacha y la vuelve opaca
+    if (tarea.completada) {
+      li.classList.add('completada');
+    }
+
+    // D) Inyectamos el texto y el botón de acción usando plantillas literales
+    li.innerHTML = `
+      <span>${tarea.titulo}</span>
+      <button class="btn-toggle">
+        ${tarea.completada ? 'Desmarcar' : 'Completar'}
+      </button>
+    `;
+
+    // E) Finalmente, anclamos la tarjeta terminada al DOM visible
+    listaContenedor.appendChild(li);
+  });
 }
 
 // 5. MANEJO DE EVENTOS: Captura de formulario
