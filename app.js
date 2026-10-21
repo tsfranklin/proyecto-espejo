@@ -103,10 +103,12 @@ botonesFiltro.forEach(boton => {
     document.querySelector('.btn-filtro.active').classList.remove('active');
     event.target.classList.add('active');
 
-    // TODO: Actualizar la variable 'filtroActual' con el atributo 'data-filtro' del botón
-    // TODO: Invocar pintarTareas() para refrescar la pantalla
+    // 1. Actualizamos la variable global 'filtroActual' leyendo el atributo del botón HTML
+    filtroActual = event.target.dataset.filtro;
+
+    // 2. Invocamos de nuevo al motor para que refresque la pantalla con el nuevo filtro
+    pintarTareas();
   });
 });
-
 // Arrancar la aplicación
 inicializarApp();
